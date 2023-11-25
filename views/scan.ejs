@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <title>Attendance Processing</title>
+  <style>
+    body {
+      text-align: center;
+    }
+
+    .waiting-message {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .loading-spinner {
+      border: 8px solid #f3f3f3;
+      border-top: 8px solid #3498db;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      margin-bottom: 20px;
+    }
+
+    .fingerprint-image {
+      max-width: 100%;
+      height: auto;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <%- include('partials/navbar.ejs') %> 
+
+  <div class="container">
+    <img width="100" src="https://media.istockphoto.com/id/165025235/vector/thumb-print.jpg?s=612x612&w=0&k=20&c=uIwQ8FtTWF2zNfuzNjHZ9slo_DQgl31ovEG4cEPhDjM="
+      alt="Fingerprint" class="fingerprint-image mb-4">
+
+    <div class="waiting-message mt-4 mb-4">
+      Please place your fingerprint for attendance.
+    </div>
+
+    <div class="loading-spinner mx-auto"></div>
+
+  </div>
+
+  <!-- Bootstrap JS and Popper.js (if needed) -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+</body>
+</html>

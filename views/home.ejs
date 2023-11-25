@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Teacher Home</title>
+
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+
+<style>
+body {
+  background: #ffffff;
+  font-family: 'Open Sans', sans-serif;  
+}
+
+.navbar {
+  background-color: #ddffcc;
+}
+
+.btn-primary {
+  background-color: #00750e;
+  border-color: #00750e;
+}
+
+.btn-success {
+  background-color: #009432;
+  border-color: #009432; 
+}
+
+a{
+  margin-bottom: 5px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<%- include('partials/navbar.ejs') %> 
+
+<!-- Page Content -->
+
+<div class="container mt-5">
+
+  <h1>My Classes <button class="btn btn-success btn-md">Create New Class</button> </h1>
+  
+  <div class="d-flex flex-wrap justify-content-start">
+
+
+   <% for(let i=0; i<classes.length; i++){ %>
+    <!-- Class Card -->
+    <div class="card m-3" style="width: 18rem;">
+      <div class="card-body">
+        <h5 class="card-title"><%= classes[i].subjectName %></h5>  
+        <p class="card-text">
+          <%= classes[i].sectionName %>
+        </p>
+        <a href="/markAttendance/<%= classes[i].id %>" class="btn btn-primary">Take Attendance</a>
+        <a href="/addStudent/<%= classes[i].id %>" class="btn btn-warning">Add Student</a>
+        <a href="/deleteSection/<%= classes[i].id %>" class="btn btn-danger">Delete Class</a>
+      </div>
+    </div>
+    <% } %>
+
+  </div>
+
+</div>
+
+</body>
+</html>

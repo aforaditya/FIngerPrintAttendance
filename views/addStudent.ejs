@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Register Student</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+
+  <style>
+    .fingerprint-icon {
+      font-size: 60px;
+      color: #00750e;
+    }
+
+    @keyframes fa-blink {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+  }
+
+  .fa-blink {
+     -webkit-animation: fa-blink .75s linear infinite;
+     -moz-animation: fa-blink .75s linear infinite;
+     -o-animation: fa-blink .75s linear infinite;
+     animation: fa-blink .75s linear infinite;
+  }
+
+  </style>
+
+</head>
+
+<body>
+
+  <%- include('partials/navbar.ejs') %> 
+
+  <div class="container mt-5">
+
+    <% if(registered) { %>
+    <div class="alert alert-success" role="alert">
+      Student Registered Successfully
+    </div>
+    <% } %>
+
+    <div class="row">
+      <div class="col-md-6">
+        
+        <h2>Register New Student</h2>
+
+        <form method="POST" action="/student">
+
+          <div class="form-group text-center">
+            <i class="fas fa-fingerprint fingerprint-icon fa-blink"></i>
+            <p class="mt-2">Place finger on sensor to scan fingerprint</p>    
+          </div>
+
+          <div class="form-group">
+            <label>Name</label>
+            <input required name="name" type="text" class="form-control" placeholder="Enter name">
+          </div>
+
+          <div class="form-group">
+            <label>UID</label>  
+            <input required name="uid" type="text" class="form-control" placeholder="Enter UID">
+          </div>
+
+          <div class="form-group">
+            <label>Mobile Number</label>  
+            <input required name="mobileNumber" type="text" class="form-control" placeholder="Enter mobile number">
+          </div>
+
+          <input required name="sectionName" type="hidden" value="<%= sectionName %>"/>
+          <input required name="fingerprint" type="hidden" value="123"/>
+          
+          <button type="submit" class="btn btn-success btn-lg btn-block">
+            Register Student  
+          </button>
+
+        </form>
+
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+      fetch('https://localhost:8000/SGIFPCapture')
+      .then(res=>res.json())
+      .then(data=>console.log(data))
+  </script>
+
+</body>
+
+</html>
