@@ -1,62 +1,270 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <title>Attendance Processing</title>
+  <title>My Page</title>
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+
   <style>
-    body {
+    .scanner {
+      height: 200px;
+      position: relative;
+    }
+
+    .scanner img {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 80px;
+      transform: translate(-50%, -50%);
+      animation: blink 1s step-end infinite;
+    }
+
+    @keyframes blink {
+      50% {
+        opacity: 0;
+      }
+    }
+
+    img {
+      width: 200px !important;
+    }
+
+    p {
       text-align: center;
     }
 
-    .waiting-message {
-      font-size: 24px;
-      margin-bottom: 20px;
-    }
-
-    .loading-spinner {
-      border: 8px solid #f3f3f3;
-      border-top: 8px solid #3498db;
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      animation: spin 1s linear infinite;
-      margin-bottom: 20px;
-    }
-
-    .fingerprint-image {
-      max-width: 100%;
-      height: auto;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+    .live-data {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      padding: 10px;
     }
   </style>
+
 </head>
+
 <body>
 
-  <%- include('partials/navbar.ejs') %> 
 
-  <div class="container">
-    <img width="100" src="https://media.istockphoto.com/id/165025235/vector/thumb-print.jpg?s=612x612&w=0&k=20&c=uIwQ8FtTWF2zNfuzNjHZ9slo_DQgl31ovEG4cEPhDjM="
-      alt="Fingerprint" class="fingerprint-image mb-4">
 
-    <div class="waiting-message mt-4 mb-4">
-      Please place your fingerprint for attendance.
+  <%- include('partials/navbar') %>
+
+
+
+    <div class="jumbotron">
+      <div class="row">
+        <div class="col-8">
+          <h4 class="">
+            <%= subjectName %> - <%= sectionName %>
+          </h4>
+        </div>
+        <div class="col-4">
+          <button id="submitAttendance" onclick="submitAttendance()" class="btn btn-primary">Submit Attendance</button>
+        </div>
+      </div>
     </div>
 
-    <div class="loading-spinner mx-auto"></div>
 
-  </div>
 
-  <!-- Bootstrap JS and Popper.js (if needed) -->
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <div class="container status">
 
+
+      <div class="alert alert-success" role="alert" style="display: none;">
+        Fingerprint scanned successfully
+      </div>
+
+      <div class="scanner">
+        <img
+          src="https://www.creativefabrica.com/wp-content/uploads/2021/06/03/Biometric-Scan-Fingerprint-Icon-Graphics-12870354-1.jpg">
+        <p>Kindly place your fingerprint on the scanner to register your attendance</p>
+      </div>
+
+
+
+    </div>
+
+
+    <div class="container">
+
+      <div class="live-data">
+        <h5>Live Attendance Data </h5>
+        <button type="button" class="btn btn-success">
+          Present <span id="presentCount" class="badge text-bg-secondary">0</span>
+        </button>
+        <button type="button" class="btn btn-danger">
+          Absent <span id="absentCount" class="badge text-bg-secondary">
+            <%= students.length %>
+          </span>
+        </button>
+        <button type="button" class="btn btn-primary">
+          Total <span class="badge text-bg-secondary">
+            <%= students.length %>
+          </span>
+        </button>
+      </div>
+
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Student Name</th>
+            <th>UID</th>
+            <th>Attendance</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <% for(let i=0; i<students.length; i++){ %>
+            <tr id="UID_<%= students[i].uid %>">
+              <td>
+                <%= students[i].name %>
+              </td>
+              <td>
+                <%= students[i].uid %>
+              </td>
+              <td>Not marked yet</td>
+            </tr>
+            <% } %>
+        </tbody>
+      </table>
+
+    </div>
+
+    <script>
+      let presentUids = []
+
+      function markPresent(uid) {
+
+        if(presentUids.includes(uid)){
+            showMessage('Already marked PRESENT')
+            return
+        }
+
+        presentUids.push(uid)
+        document.querySelector(`#UID_${uid}`).style.backgroundColor = 'green'
+        document.querySelector(`#UID_${uid}`).style.color = 'white'
+        document.querySelector(`#UID_${uid} td:nth-child(3)`).innerText = 'Present'
+
+        // Update Count
+        document.querySelector('#presentCount').innerText = presentUids.length
+        document.querySelector('#absentCount').innerText -= 1
+      }
+
+
+      function submitAttendance() {
+
+        document.querySelector('#submitAttendance').innerText = 'Submitting...'
+        const data = {
+          sectionId: "<%= sectionId %>",
+          presentUids: presentUids
+        };
+
+        fetch('/submitAttendance', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        }).then(res => res.json())
+          .then(data => window.location.replace('/?attendanceMarked'))
+
+      }
+
+    </script>
+
+    <script>
+
+      let students = []
+
+      fetch('/allStudents/<%= sectionId %>')
+        .then(res => res.json())
+        .then(data => {
+          console.log(data);
+          students = data
+          scanFingerprint()
+        })
+
+      async function scanFingerprint() {
+        // Scan fingerprint
+        fetch('https://localhost:8000/SGIFPCapture')
+          .then(res => res.json())
+          .then(data => {
+
+            showMessage('Matching Fingerprint')
+
+            if (data['ErrorCode'] == '54') {
+              showMessage("Timeout. No finger was placed")
+              scanFingerprint()
+              return
+            }
+
+            if (data['ErrorCode'] != '0') {
+              alert("Error: " + data['ErrorCode'])
+              return
+            }
+
+
+            if (data['BMPBase64'])
+            console.log('READ');
+              matchFingerprint(data['BMPBase64'])
+          })
+      }
+
+
+
+      var audio = new Audio('/sounds/scanned.mp3')
+
+      async function matchFingerprint(fingerprint) {
+
+        console.log('MatchingScore');
+
+        
+
+        let resp = await fetch('http://127.0.0.1:5000/match',{
+          method: 'POST',
+          body: JSON.stringify({fingerprint}),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+
+
+        let data = await resp.json()
+
+        if(data.score < 2){
+          showMessage('This Fingerprint is not registered')
+          scanFingerprint()
+          return
+        }
+
+        let {uid, score} = data
+        let name = (students.filter(student=> student.uid==uid))[0].name
+        markPresent(uid)
+        audio.play()
+        showMessage(`Marked PRESENT:  ${uid} ${name}   Score: ${score}`)
+        scanFingerprint()
+
+      }
+
+
+      function showMessage(message) {
+
+        document.querySelector('.status .alert').style.display = 'block'
+        document.querySelector('.status .alert').innerText = message
+        document.querySelector('.status .scanner').style.display = 'none'
+
+        setTimeout(() => {
+          document.querySelector('.status .alert').style.display = 'none'
+          document.querySelector('.status .scanner').style.display = 'block'
+        }, 3000)
+
+      }
+
+
+    </script>
 
 </body>
+
 </html>

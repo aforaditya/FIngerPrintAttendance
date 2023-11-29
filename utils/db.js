@@ -29,7 +29,10 @@ async function deleteDoc(collection, id){
 }
 
 async function set(collection, id, data){
+    if(id)
     await db.collection(collection).doc(id).set({...data})
+    else
+    await db.collection(collection).doc().set({...data})
 }
 
 
@@ -49,4 +52,21 @@ async function addToArray(collection, id, fieldName, newItem) {
   }
 
 
-module.exports = {get, getCollection, addToArray}
+  async function addFingerprintToStudent(sectionId, studentUid, newFingerprint) {
+    try {
+      // Specify the collection and document ID
+      const sectionCollection = firestore.collection('section');
+      
+      // Update the Firestore document with the new fingerprint for the specified student
+      await sectionCollection.doc(sectionId).update({
+        [`students.${studentUid}.fingerprint`]: firebase.firestore.FieldValue.arrayUnion(newFingerprint)
+      });
+  
+      res.json({success: true})
+    } catch (error) {
+        res.json({success: false})
+    }
+  }
+
+
+module.exports = {get, getCollection, addToArray, set, deleteDoc}

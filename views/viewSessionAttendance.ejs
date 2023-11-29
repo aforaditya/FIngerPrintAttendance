@@ -1,0 +1,68 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <style>
+            .live-data{
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      padding: 10px;
+    }
+    </style>
+</head>
+<body>
+
+    <%- include('partials/navbar') %>
+
+    
+
+    <section class="jumbotron">
+        <div class="container">
+          <h1 class="">Computer Networks</h1>
+          <p class="lead">Section: <%= sectionName %></p>
+          <p class="lead">Attendance taken on: <%= date %> at <%= time %></p>
+        </div>
+      </section>
+
+    <div class="container">
+
+        <div class="live-data">
+          <h5>Attendance Data </h5>  
+          <button type="button" class="btn btn-success">
+            Present <span class="badge text-bg-secondary"><%= presentCount %></span>
+          </button>
+          <button type="button" class="btn btn-danger">
+            Absent <span class="badge text-bg-secondary"><%= absentCount %></span>
+          </button>
+          <button type="button" class="btn btn-primary">
+            Total <span class="badge text-bg-secondary"><%= attendanceList.length %></span>
+          </button>
+        </div>
+  
+  
+        <table class="table">
+          <thead>
+            <tr >
+              <th>Student Name</th>
+              <th>UID</th>
+              <th>Attendance</th>
+            </tr>
+          </thead>
+  
+          <tbody>
+            <% for(let i=0; i<attendanceList.length; i++){ %>
+            <tr id="<%= attendanceList[i].uid %>">
+              <td><%= attendanceList[i].name %></td>
+              <td><%= attendanceList[i].uid %></td>
+              <td><%= attendanceList[i].status %></td>
+            </tr>
+          <% } %>
+          </tbody>
+        </table>
+  
+      </div>
+</body>
+</html>

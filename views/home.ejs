@@ -42,7 +42,13 @@ a{
 
 <div class="container mt-5">
 
-  <h1>My Classes <button class="btn btn-success btn-md">Create New Class</button> </h1>
+ <%  if(attendanceMarked){ %>
+  <div class="alert alert-success" role="alert">
+    Attendance Marked Successfully
+  </div>
+  <% } %>
+
+  <h2>My Classes <a href="/createNewSection"><button class="btn btn-outline-primary btn-md">Create New Class</button></a> </h2>
   
   <div class="d-flex flex-wrap justify-content-start">
 
@@ -53,9 +59,10 @@ a{
       <div class="card-body">
         <h5 class="card-title"><%= classes[i].subjectName %></h5>  
         <p class="card-text">
-          <%= classes[i].sectionName %>
+          Section: <%= classes[i].sectionName %>
         </p>
         <a href="/markAttendance/<%= classes[i].id %>" class="btn btn-primary">Take Attendance</a>
+        <a href="/viewAttendance/<%= classes[i].id %>" class="btn btn-outline-primary">View Attendance</a>
         <a href="/addStudent/<%= classes[i].id %>" class="btn btn-warning">Add Student</a>
         <a href="/deleteSection/<%= classes[i].id %>" class="btn btn-danger">Delete Class</a>
       </div>
